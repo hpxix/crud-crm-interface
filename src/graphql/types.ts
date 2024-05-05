@@ -250,3 +250,19 @@ export type TaskStagesSelectQuery = {
     nodes: Array<Pick<Types.TaskStage, "id" | "title">>;
   };
 };
+export type AccountSettingsGetUserQuery = {
+  user: Pick<
+    Types.User,
+    "id" | "name" | "email" | "avatarUrl" | "jobTitle" | "phone" | "timezone"
+  >;
+};
+export type AccountSettingsUpdateUserMutation = {
+  updateOneUser: Pick<
+    Types.User,
+    "id" | "name" | "email" | "avatarUrl" | "jobTitle" | "phone" | "timezone"
+  >;
+};
+export type AccountSettingsUpdateUserMutationVariables = Types.Exact<{
+  input: Types.UpdateOneUserInput;
+}>;
+
