@@ -22,6 +22,7 @@ import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import { authProvider } from "./providers/auth";
 import { Home, Login, ForgotPassword, Register } from "./pages/index";
 import Layout from "./components/layout";
+import { resources } from "./config/resources";
 
 // import { ColorModeContextProvider } from "./contexts/color-mode";
 
@@ -45,6 +46,7 @@ function App() {
               notificationProvider={useNotificationProvider}
               routerProvider={routerBindings}
               authProvider={authProvider}
+              resources={resources}
               options={{
                 syncWithLocation: true,
                 warnWhenUnsavedChanges: true,
