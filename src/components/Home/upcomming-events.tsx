@@ -2,11 +2,22 @@ import React, { useState } from "react";
 import { Card } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import { Text } from "../text";
-import { List } from "antd/lib";
+import { Badge, List, Tooltip } from "antd/lib";
+import UpcomingEventsSkeleton from "../skeleton/upcoming-events";
+import { getDate } from "@/providers/utilities/helpers";
+import { useList } from "@refinedev/core";
+import { DASHBORAD_CALENDAR_UPCOMING_EVENTS_QUERY } from "@/graphql/queries";
 
 function UpcommingEvents() {
   const [isLoading, setIsLoading] = useState(true);
 
+  const {data, isLoading: eventsLoading} = useList({
+    resource: 'events',
+    meta: {
+      gqlQuery: DASHBORAD_CALENDAR_UPCOMING_EVENTS_QUERY
+    }
+  })
+  console.log('data:',(JSON.stringify(data)))
   return (
     <div>
       <Card
@@ -28,14 +39,30 @@ function UpcommingEvents() {
             dataSource={Array.from({ length: 5 }).map((_, index) => ({
               id: index,
             }))}
-            renderItem={(item) => (
-              <List.Item key={item.id}>
-                <Card>{/* Card content */}</Card>
-              </List.Item>
-            )}
+            renderItem={() => <UpcomingEventsSkeleton />}
           />
         ) : (
-          <List />
+          <List
+            itemLayout="horizontal"
+            //add data for your -Upcomming Events
+            dataSource={data?.data || []}
+            renderItem={(item) => {
+              const renderData = getDate(item.startDate, item.endDate);
+              return (
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={<Badge color={item.color} />}
+                    title={<Text size="xs">{renderData}</Text>}
+                    description={
+                      <Text ellipsis={{ tooltip: "true" }} strong>
+                        {item.title}
+                      </Text>
+                    }
+                  />
+                </List.Item>
+              );
+            }}
+          />
         )}
       </Card>
     </div>

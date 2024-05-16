@@ -1,4 +1,4 @@
-import { getNameInitials } from "@/utilities";
+import { getNameInitials } from "@/utilities-first";
 import { useGetIdentity } from "@refinedev/core";
 import { Avatar as AntdAvatar } from "antd";
 import { AvatarProps } from "antd/lib";
