@@ -1,4 +1,4 @@
-import { SkeletonCartTotals } from "@/components/skeleton";
+import { SkeletonCartTotals } from "@/components/skeleton-cart";
 
 export const SkeletonOrderInformation: React.FC = () => {
   return (

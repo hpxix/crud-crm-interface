@@ -2,7 +2,7 @@ import {
   SkeletonOrderItems,
   SkeletonOrderConfirmedHeader,
   SkeletonOrderInformation,
-} from "@/components/skeleton";
+} from "@/components/skeleton-cart";
 
 export const SkeletonOrderConfirmed: React.FC = () => {
   return (
