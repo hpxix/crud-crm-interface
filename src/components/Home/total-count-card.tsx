@@ -7,7 +7,7 @@ import { Area, AreaConfig } from "@ant-design/plots";
 type Props = {
   resources: "companies" | "contacts" | "deals";
   isLoading: boolean;
-  totalCount: number;
+  totalCount?: number;
 };
 
 function DashboardTotalCountCard({ resources, isLoading, totalCount }: Props) {
