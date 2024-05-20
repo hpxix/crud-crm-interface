@@ -226,7 +226,7 @@ export const companySizeOptions: {
     label: "Medium",
     value: "MEDIUM",
   },
-  {
+  { 
     label: "Small",
     value: "SMALL",
   },

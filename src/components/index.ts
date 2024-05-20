@@ -6,6 +6,6 @@ import KanbanCloumnSkeleton from '@/components/skeleton/kanban'
 import LatestActivitiesSkeleton from '@/components/skeleton/latest-activities'
 import ProjectCardSkeleton from '@/components/skeleton/project-card'
 import DashboardTotalCountCard from '@/components/Home/total-count-card'
+import LatesActivities from '@/components/Home/dashboard-latest-activities'
 
-
-export { UpcommingEvents, DealsCharts, UpcommingEventsSkelton, AccordionHeaderSkeleton, KanbanCloumnSkeleton, LatestActivitiesSkeleton, ProjectCardSkeleton, DashboardTotalCountCard }
+export { UpcommingEvents, DealsCharts, UpcommingEventsSkelton, AccordionHeaderSkeleton, KanbanCloumnSkeleton, LatestActivitiesSkeleton, ProjectCardSkeleton, DashboardTotalCountCard, LatesActivities }
