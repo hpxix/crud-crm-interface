@@ -1,30 +1,38 @@
-import { getNameInitials } from "@/utilities-first";
-import { useGetIdentity } from "@refinedev/core";
+import { FC, memo } from "react";
+
+import type { AvatarProps } from "antd";
 import { Avatar as AntdAvatar } from "antd";
-import { AvatarProps } from "antd/lib";
+
+import { getNameInitials, getRandomColorFromString } from "@/utilities-first";
 
 type Props = AvatarProps & {
   name?: string;
 };
 
-function CustomAvatar({ name, style, ...rest }: Props) {
-  const { data: user } = useGetIdentity();
+const CustomAvatarComponent: FC<Props> = ({ name = "", style, ...rest }) => {
   return (
     <AntdAvatar
       alt={name}
-      size={"small"}
+      size="small"
       style={{
-        backgroundColor: "#87d068",
+        backgroundColor: rest?.src
+          ? "transparent"
+          : getRandomColorFromString(name),
         display: "flex",
         alignItems: "center",
         border: "none",
-        ...style
+        ...style,
       }}
       {...rest}
     >
-      {getNameInitials(name || "")}
+      {getNameInitials(name)}
     </AntdAvatar>
   );
-}
+};
 
-export default CustomAvatar;
+export const CustomAvatar = memo(
+  CustomAvatarComponent,
+  (prevProps, nextProps) => {
+    return prevProps.name === nextProps.name && prevProps.src === nextProps.src;
+  },
+);

@@ -31,7 +31,7 @@ import {
   AccountSettingsUpdateUserMutationVariables,
 } from "@/graphql/types";
 
-import CustomAvatar from "@/components/custom-avatar";
+import { CustomAvatar } from "@/components/custom-avatar";
 import { SingleElementForm } from "@/components/single-element-form/index";
 import { Text } from "@/components/text";
 import styles from "./index.module.css";

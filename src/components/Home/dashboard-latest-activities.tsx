@@ -9,7 +9,8 @@ import { DASHBOARD_LATEST_ACTIVITIES_AUDITS_QUERY, DASHBOARD_LATEST_ACTIVITIES_D
 import { GetFieldsFromList } from "@refinedev/nestjs-query";
 import { DashboardLatestActivitiesAuditsQuery, DashboardLatestActivitiesDealsQuery } from "@/graphql/types";
 import dayjs from "dayjs";
-import CustomAvatar from "../custom-avatar";
+import { CustomAvatar } from "../custom-avatar";
+import { Space } from "antd/lib";
 
 function LatesActivities() {
 
@@ -75,8 +76,7 @@ console.log(isLoadingAudit, isLoadingDeals)
         <List
         itemLayout="horizontal" dataSource={audit?.data} renderItem={(item) => {
           const deal = deals?.data.find((deal) => deal.id == String(item.targetId))  || undefined; 
-          const formattedDate = deal ? dayjs(deal?.createdAt).format("MMM/DD/YYYY - HH:mm") : ''
-          console.log('deal?.company?.name:', deal?.company?.name)
+          const formattedDate = deal ? dayjs(deal?.createdAt).format("MMM DD, YYYY - HH:mm") : ''
           return (
             <List.Item>
               <List.Item.Meta 
@@ -86,7 +86,16 @@ console.log(isLoadingAudit, isLoadingDeals)
                 shape="square"
                 size={48}
                 src={deal?.company.avatarUrl}
-                name='commit number 2 motherfucker <3'/>
+                name={deal?.company.name}/>
+              }
+              description={
+                <Space size={4}>
+                  <Text strong> {item.user?.name || 'ADD NAME'}</Text>
+                  <Text>
+                    {item.action === 'CREATE' ? 'created' : 'moved'}
+                  </Text>
+                  <Text strong>{deal?.title}</Text>
+                </Space>
               }
               />
             </List.Item>
