@@ -6,7 +6,6 @@ import { useCustom } from "@refinedev/core";
 import { DASHBOARD_TOTAL_COUNTS_QUERY } from "@/graphql/queries";
 import { DashboardTotalCountsQuery } from "@/graphql/types";
 
-
 export const Home = () => {
   const { data, isLoading } = useCustom<DashboardTotalCountsQuery>({
     url: "",

@@ -20,7 +20,7 @@ import { App as AntdApp } from "antd";
 import { createClient } from "graphql-ws";
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import { authProvider } from "./providers/auth";
-import { Home, Login, ForgotPassword, Register } from "./pages/index";
+import { Home, Login, ForgotPassword, Register, CompanyListPage } from "./pages/index";
 import Layout from "./components/layout";
 import { resources } from "./config/resources";
 
@@ -77,6 +77,7 @@ function App() {
                   }
                 >
                   <Route index element={<Home />} />
+                  <Route path="/companies" element={<CompanyListPage />} />
                 </Route>
               </Routes>
               <RefineKbar />
