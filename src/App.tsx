@@ -20,9 +20,16 @@ import { App as AntdApp } from "antd";
 import { createClient } from "graphql-ws";
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import { authProvider } from "./providers/auth";
-import { Home, Login, ForgotPassword, Register, CompanyListPage } from "./pages/index";
+import {
+  Home,
+  Login,
+  ForgotPassword,
+  Register,
+  CompanyListPage,
+} from "./pages/index";
 import Layout from "./components/layout";
 import { resources } from "./config/resources";
+import Create from "./pages/company/create";
 
 // import { ColorModeContextProvider } from "./contexts/color-mode";
 
@@ -77,7 +84,10 @@ function App() {
                   }
                 >
                   <Route index element={<Home />} />
-                  <Route path="/companies" element={<CompanyListPage />} />
+                  <Route path="/companies">
+                    <Route index element={<CompanyListPage />} />
+                    <Route path="new" element={<Create />} />
+                  </Route>
                 </Route>
               </Routes>
               <RefineKbar />
