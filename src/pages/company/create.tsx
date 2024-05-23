@@ -1,9 +1,11 @@
 import React from "react";
-import { Modal, Form, Input } from "antd";
+import { Modal, Form, Input, Select } from "antd";
 import CompanyListPage from "./list";
-import { useModalForm } from "@refinedev/antd";
+import { useModalForm, useSelect } from "@refinedev/antd";
 import { useGo } from "@refinedev/core";
 import { CREATE_COMPANY_MUTATION } from "@/graphql/mutations";
+import { USERS_SELECT_QUERY } from "@/graphql/queries";
+import SelectOptionWithAvatar from "@/components/select-option-with-avatar";
 
 function Create() {
   const go = useGo();
@@ -28,6 +30,14 @@ function Create() {
     },
   });
 
+  const { selectProps, queryResult } = useSelect({
+    resource: "users",
+    optionLabel: "name",
+    meta: {
+      gqlQuery: USERS_SELECT_QUERY,
+    },
+  });
+  console.log('queryResult.data?.data:', queryResult.data?.data)
   return (
     <CompanyListPage>
       <Modal
@@ -44,6 +54,27 @@ function Create() {
             rules={[{ required: true }]}
           >
             <Input placeholder="Please Enter Company name" />
+          </Form.Item>
+          <Form.Item
+            label="Sales Owner"
+            name="salesOwnerId"
+            rules={[{ required: true }]}
+          >
+            <Select placeholder="Please select a sales owner" 
+            {...selectProps}
+            options={
+              queryResult.data?.data.map((user: any) => ({
+                values: user.id,
+                label:(
+                  <SelectOptionWithAvatar
+                  name={user.name}
+                  avatarUrl={user.avatarUrl ?? undefined}>
+
+                  </SelectOptionWithAvatar>
+                )
+              }))
+            }
+            />
           </Form.Item>
         </Form>
       </Modal>
