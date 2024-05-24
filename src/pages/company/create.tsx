@@ -6,6 +6,8 @@ import { useGo } from "@refinedev/core";
 import { CREATE_COMPANY_MUTATION } from "@/graphql/mutations";
 import { USERS_SELECT_QUERY } from "@/graphql/queries";
 import SelectOptionWithAvatar from "@/components/select-option-with-avatar";
+import { GetFieldsFromList } from "@refinedev/nestjs-query";
+import { UsersSelectQuery } from "@/graphql/types";
 
 function Create() {
   const go = useGo();
@@ -30,14 +32,16 @@ function Create() {
     },
   });
 
-  const { selectProps, queryResult } = useSelect({
+  const { selectProps, queryResult } = useSelect<
+    GetFieldsFromList<UsersSelectQuery>
+  >({
     resource: "users",
     optionLabel: "name",
     meta: {
       gqlQuery: USERS_SELECT_QUERY,
     },
   });
-  console.log('queryResult.data?.data:', queryResult.data?.data)
+  console.log("queryResult.data?.data:", queryResult.data?.data);
   return (
     <CompanyListPage>
       <Modal
@@ -60,20 +64,18 @@ function Create() {
             name="salesOwnerId"
             rules={[{ required: true }]}
           >
-            <Select placeholder="Please select a sales owner" 
-            {...selectProps}
-            options={
-              queryResult.data?.data.map((user: any) => ({
+            <Select
+              placeholder="Please select a sales owner"
+              {...selectProps}
+              options={queryResult.data?.data.map((user: any) => ({
                 values: user.id,
-                label:(
+                label: (
                   <SelectOptionWithAvatar
-                  name={user.name}
-                  avatarUrl={user.avatarUrl ?? undefined}>
-
-                  </SelectOptionWithAvatar>
-                )
-              }))
-            }
+                    name={user.name}
+                    avatarUrl={user.avatarUrl ?? undefined}
+                  ></SelectOptionWithAvatar>
+                ),
+              }))}
             />
           </Form.Item>
         </Form>
