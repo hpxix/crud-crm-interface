@@ -68,7 +68,7 @@ function Create() {
               placeholder="Please select a sales owner"
               {...selectProps}
               options={queryResult.data?.data.map((user: any) => ({
-                values: user.id,
+                value: user.id,
                 label: (
                   <SelectOptionWithAvatar
                     name={user.name}
