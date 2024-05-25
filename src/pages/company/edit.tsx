@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Input, Select, Form, Col, Row} from "antd";
+import { Modal, Input, Select, Form, Col, Row, InputNumber } from "antd";
 import { Edit, useForm, useSelect } from "@refinedev/antd";
 import { UPDATE_COMPANY_MUTATION } from "@/graphql/mutations";
 import { CustomAvatar } from "@/components";
@@ -8,9 +8,13 @@ import { GetFieldsFromList } from "@refinedev/nestjs-query";
 import { UsersSelectQuery } from "@/graphql/types";
 import { USERS_SELECT_QUERY } from "@/graphql/queries";
 import SelectOptionWithAvatar from "@/components/select-option-with-avatar";
+import {
+  businessTypeOptions,
+  companySizeOptions,
+  industryOptions,
+} from "@/components/constants";
 
 function EditPage() {
-
   //useForm For the Company Form
   const { saveButtonProps, formProps, formLoading, queryResult } = useForm({
     redirect: false,
@@ -21,17 +25,17 @@ function EditPage() {
 
   //useSelect Hook for CompanyOwnerId:
   const { selectProps, queryResult: queryResultUsers } = useSelect<
-  GetFieldsFromList<UsersSelectQuery>
->({
-  resource: "users",
-  optionLabel: "name",
-  meta: {
-    gqlQuery: USERS_SELECT_QUERY,
-  },
-  pagination:{
-    mode: 'off'
-  }
-});
+    GetFieldsFromList<UsersSelectQuery>
+  >({
+    resource: "users",
+    optionLabel: "name",
+    meta: {
+      gqlQuery: USERS_SELECT_QUERY,
+    },
+    pagination: {
+      mode: "off",
+    },
+  });
 
   //destructure avatarUrl
   const { avatarUrl, name } = queryResult?.data?.data || {};
@@ -53,14 +57,14 @@ function EditPage() {
                 style={{ width: "96", height: "96", marginBottom: "24px" }}
               />
               <Form.Item
-                label="Company name"
+                label="اسم الشركه"
                 name="name"
                 initialValue={formProps?.initialValues?.salesOwner?.id}
               >
                 <Input placeholder="Please Enter Company name" />
               </Form.Item>
               <Form.Item
-                label="Sales Owner"
+                label="ممثل المبيعات"
                 name="salesOwnerId"
                 rules={[{ required: true }]}
               >
@@ -77,6 +81,26 @@ function EditPage() {
                     ),
                   }))}
                 />
+              </Form.Item>
+              <Form.Item label="حجم النشاط">
+                <Select options={companySizeOptions} />
+              </Form.Item>
+              <Form.Item label="قيمة النشاط">
+                <InputNumber
+                  autoFocus
+                  addonBefore="ريال"
+                  min={0}
+                  placeholder="0,00"
+                />
+              </Form.Item>
+              <Form.Item label="نوع النشاط">
+                <Select options={businessTypeOptions} />
+              </Form.Item>
+              <Form.Item label="المدينه" name="country">
+                <Input placeholder="المدينه" />
+              </Form.Item>
+              <Form.Item label="الموقع الاكتروني" name='website'>
+                <Input placeholder="الموقع الاكتروني" />
               </Form.Item>
             </Form>
           </Edit>
