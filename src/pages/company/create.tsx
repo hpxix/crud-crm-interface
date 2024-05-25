@@ -41,7 +41,7 @@ function Create() {
       gqlQuery: USERS_SELECT_QUERY,
     },
   });
-  console.log("queryResult.data?.data:", queryResult.data?.data);
+  
   return (
     <CompanyListPage>
       <Modal

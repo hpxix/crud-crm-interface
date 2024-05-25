@@ -1,17 +1,37 @@
 import React from "react";
-import { Row, Col, Form } from "antd";
-import { Edit, useForm } from "@refinedev/antd";
+import { Modal, Input, Select, Form, Col, Row} from "antd";
+import { Edit, useForm, useSelect } from "@refinedev/antd";
 import { UPDATE_COMPANY_MUTATION } from "@/graphql/mutations";
 import { CustomAvatar } from "@/components";
 import { getNameInitials } from "@/utilities-first";
+import { GetFieldsFromList } from "@refinedev/nestjs-query";
+import { UsersSelectQuery } from "@/graphql/types";
+import { USERS_SELECT_QUERY } from "@/graphql/queries";
+import SelectOptionWithAvatar from "@/components/select-option-with-avatar";
 
 function EditPage() {
+
+  //useForm For the Company Form
   const { saveButtonProps, formProps, formLoading, queryResult } = useForm({
     redirect: false,
     meta: {
       gqlMutation: UPDATE_COMPANY_MUTATION,
     },
   });
+
+  //useSelect Hook for CompanyOwnerId:
+  const { selectProps, queryResult: queryResultUsers } = useSelect<
+  GetFieldsFromList<UsersSelectQuery>
+>({
+  resource: "users",
+  optionLabel: "name",
+  meta: {
+    gqlQuery: USERS_SELECT_QUERY,
+  },
+  pagination:{
+    mode: 'off'
+  }
+});
 
   //destructure avatarUrl
   const { avatarUrl, name } = queryResult?.data?.data || {};
@@ -32,6 +52,32 @@ function EditPage() {
                 name={getNameInitials(name || "")}
                 style={{ width: "96", height: "96", marginBottom: "24px" }}
               />
+              <Form.Item
+                label="Company name"
+                name="name"
+                initialValue={formProps?.initialValues?.salesOwner?.id}
+              >
+                <Input placeholder="Please Enter Company name" />
+              </Form.Item>
+              <Form.Item
+                label="Sales Owner"
+                name="salesOwnerId"
+                rules={[{ required: true }]}
+              >
+                <Select
+                  placeholder="Please select a sales owner"
+                  {...selectProps}
+                  options={queryResultUsers.data?.data.map((user: any) => ({
+                    value: user.id,
+                    label: (
+                      <SelectOptionWithAvatar
+                        name={user.name}
+                        avatarUrl={user.avatarUrl ?? undefined}
+                      ></SelectOptionWithAvatar>
+                    ),
+                  }))}
+                />
+              </Form.Item>
             </Form>
           </Edit>
         </Col>
