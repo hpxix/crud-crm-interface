@@ -32,6 +32,7 @@ import { resources } from "./config/resources";
 import Create from "./pages/company/create";
 import Edit from "./pages/company/edit";
 import EditPage from "./pages/company/edit";
+import List from "./pages/tasks/list";
 
 // import { ColorModeContextProvider } from "./contexts/color-mode";
 
@@ -90,6 +91,11 @@ function App() {
                     <Route index element={<CompanyListPage />} />
                     <Route path="new" element={<Create />} />
                     <Route path="edit/:id" element={<EditPage />} />
+                  </Route>
+                  <Route>
+                    <Route path="/tasks">
+                    <Route index element={<List />} />
+                    </Route>
                   </Route>
                 </Route>
               </Routes>
