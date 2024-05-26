@@ -13,6 +13,7 @@ import {
   companySizeOptions,
   industryOptions,
 } from "@/components/constants";
+import { CompanyContactsTable } from "./contact-table";
 
 function EditPage() {
   //useForm For the Company Form
@@ -104,6 +105,9 @@ function EditPage() {
               </Form.Item>
             </Form>
           </Edit>
+        </Col>
+        <Col>
+        <CompanyContactsTable />
         </Col>
       </Row>
     </div>
