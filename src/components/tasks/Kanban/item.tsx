@@ -12,8 +12,8 @@ interface Props {
 
 function KanbanItem({ children, id, data }: React.PropsWithChildren<Props>) {
   const { attributes, listeners, setNodeRef, active } = useDraggable({
-    id: "",
-    data: "",
+    id,
+    data,
   });
   return (
     <div style={{ position: "relative" }}>
@@ -34,7 +34,7 @@ function KanbanItem({ children, id, data }: React.PropsWithChildren<Props>) {
               style={{
                 borderRadius: "8px",
                 boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px;",
-                cursor: 'grabbing'
+                cursor: "grabbing",
               }}
             ></div>
           </DragOverlay>

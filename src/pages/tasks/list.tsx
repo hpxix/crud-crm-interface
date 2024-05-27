@@ -87,9 +87,16 @@ function List() {
             count={taskStages.unassignedStage.length || 0}
             onAddClick={() => handleAddCard({ stageId: "unassigned" })}
           >
-            {/* <KanbanItem>This is my First to-do</KanbanItem> */}
+            {taskStages?.unassignedStage.map((task) => (
+              <KanbanItem
+                key={task.id}
+                id={task?.id}
+                data={{ ...task, stageId: "unassigned" }}
+              >
+                {task.title}
+              </KanbanItem>
+            ))}
           </KanbanColumn>
-          <KanbanColumn></KanbanColumn>
         </KanBanBoard>
       </KanBanBoardContainer>
     </>

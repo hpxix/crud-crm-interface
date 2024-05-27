@@ -1,23 +1,38 @@
 import React from "react";
-import { useDroppable } from "@dnd-kit/core";
+import { useDroppable, UseDroppableArguments } from "@dnd-kit/core";
 import { Space, Badge, Button } from "antd";
 import { Text } from "@/components/text";
 import { PlusOutlined } from "@ant-design/icons";
 
-function KanbanColumn({ children }: React.PropsWithChildren) {
+interface Props {
+  id: string;
+  title: string;
+  description?: React.ReactNode;
+  count: number;
+  data?: UseDroppableArguments["data"];
+  onAddClick?: (args: { id: string }) => void;
+}
+
+function KanbanColumn({
+  children,
+  id,
+  title,
+  description,
+  count,
+  data,
+  onAddClick,
+}: React.PropsWithChildren<Props>) {
   //isOver is a boolean idicating weather the element is being hovering over the target,
   //setNodeRef is a function to pass to the ref prop you want to make dropable
   //active is an object that have information aboute the dropabble item that is currently being dragged
   const { isOver, setNodeRef, active } = useDroppable({
-    id: "",
-    data: "",
+    id,
+    data,
   });
-  let count = 2;
 
-  const onAddClickHandler = () => {};
-
-  const description = "description";
-  const title = "title";
+  const onAddClickHandler = () => {
+    onAddClick?.({ id });
+  };
 
   return (
     <div
@@ -50,16 +65,18 @@ function KanbanColumn({ children }: React.PropsWithChildren) {
           flex: 1,
           overflowY: active ? "unset" : "scroll",
           border: "2px dashed transparent",
-          borderColor: isOver ? '#000040' : 'transparent',
-          borderRadius: '4px'
+          borderColor: isOver ? "#000040" : "transparent",
+          borderRadius: "4px",
         }}
       >
-        <div style={{
-          marginTop: '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px'
-        }}>
+        <div
+          style={{
+            marginTop: "12px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+          }}
+        >
           {children}
         </div>
       </div>
