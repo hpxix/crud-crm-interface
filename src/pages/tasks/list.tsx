@@ -10,7 +10,9 @@ function List() {
     <>
       <KanBanBoardContainer>
         <KanBanBoard>
-          <KanbanColumn></KanbanColumn>
+          <KanbanColumn>
+            <KanbanItem></KanbanItem>
+          </KanbanColumn>
           <KanbanColumn></KanbanColumn>
         </KanBanBoard>
       </KanBanBoardContainer>
