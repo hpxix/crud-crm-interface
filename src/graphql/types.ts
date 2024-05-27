@@ -39,6 +39,20 @@ export type UpdateCompanyMutation = {
     | "avatarUrl"
   > & { salesOwner: Pick<Types.User, "id" | "name" | "avatarUrl"> };
 };
+export type KanbanTasksQuery = {
+  tasks: Pick<Types.TaskConnection, "totalCount"> & {
+    nodes: Array<
+      Pick<
+        Types.Task,
+        "id" | "title" | "description" | "dueDate" | "completed" | "stageId"
+      > & {
+        checklist: Array<Pick<Types.CheckListItem, "title" | "checked">>;
+        users: Array<Pick<Types.User, "id" | "name" | "avatarUrl">>;
+        comments: Pick<Types.TaskCommentsConnection, "totalCount">;
+      }
+    >;
+  };
+};
 
 export type UpdateTaskStageMutationVariables = Types.Exact<{
   input: Types.UpdateOneTaskInput;
@@ -265,4 +279,3 @@ export type AccountSettingsUpdateUserMutation = {
 export type AccountSettingsUpdateUserMutationVariables = Types.Exact<{
   input: Types.UpdateOneUserInput;
 }>;
-
