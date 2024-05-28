@@ -1,9 +1,19 @@
 import { User } from "@/graphql/schema.types";
 import { ConfigProvider, theme, Card, Button } from "antd";
 import { Text } from "@/components/text";
-import React from "react";
-import { Dropdown, MenuProps } from "antd/lib";
-import { EyeOutlined } from "@ant-design/icons";
+import React, { useMemo } from "react";
+import { Dropdown, MenuProps, Space, Tag, Tooltip } from "antd/lib";
+import {
+  ClockCircleOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  MoreOutlined,
+} from "@ant-design/icons";
+import { CustomAvatar } from "@/components/custom-avatar";
+import { TextIcon } from "@/components/icon";
+import dayjs from "dayjs";
+import { getDateColor } from "@/utilities-first";
+import { useDelete, useNavigation } from "@refinedev/core";
 
 interface ProjectCardProps {
   id: string;
@@ -19,27 +29,49 @@ interface ProjectCardProps {
 
 function ProjectCard({ id, title, dueDate, users }: ProjectCardProps) {
   const token = theme.useToken();
-  const edit = () => {};
+  const { edit } = useNavigation();
+  const { mutate } = useDelete();
 
-  const dropDownItems = React.useMemo(() => {
-    const dropDownItems: MenuProps["items"] = [
+  const dropdownItems = useMemo(() => {
+    const dropdownItems: MenuProps["items"] = [
       {
-        label: "View Card",
-        key: 1,
+        label: "View card",
+        key: "1",
         icon: <EyeOutlined />,
         onClick: () => {
-          edit();
+          edit("tasks", id, "replace");
         },
       },
       {
         danger: true,
-        label: "Delete Card",
+        label: "Delete card",
         key: "2",
-        onClick: () => {},
+        icon: <DeleteOutlined />,
+        onClick: () => {
+          mutate({
+            resource: "tasks",
+            id,
+            meta: {
+              operation: "task",
+            },
+          });
+        },
       },
     ];
-    return dropDownItems;
+
+    return dropdownItems;
   }, []);
+
+  const dueDateOptions = useMemo(() => {
+    if (!dueDate) return null;
+
+    const date = dayjs(dueDate);
+
+    return {
+      color: getDateColor({ date: dueDate }) as string,
+      text: date.format("MMM D"),
+    };
+  }, [dueDate]);
 
   return (
     <>
@@ -57,27 +89,105 @@ function ProjectCard({ id, title, dueDate, users }: ProjectCardProps) {
       >
         <Card
           size="small"
-          title={
-            <Text
-              ellipsis={{ tooltip: title }}
-              onClick={() => {
-                edit;
+          title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
+          onClick={() => {
+            edit("tasks", id, "replace");
+          }}
+          extra={
+            <Dropdown
+              trigger={["click"]}
+              menu={{
+                items: dropdownItems,
+                onPointerDown: (e) => {
+                  e.stopPropagation();
+                },
+                onClick: (e) => {
+                  e.domEvent.stopPropagation();
+                },
               }}
-              extra={
-                <Dropdown
-                  trigger={["click"]}
-                  menu={{ items: dropDownItems }}
-                >
-                  <Button>
-                    Xd
-                  </Button>
-                </Dropdown>
-              }
+              placement="bottom"
+              arrow={{ pointAtCenter: true }}
             >
-              {title}
-            </Text>
+              <Button
+                type="text"
+                shape="circle"
+                icon={
+                  <MoreOutlined
+                    style={{
+                      transform: "rotate(90deg)",
+                    }}
+                  />
+                }
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              />
+            </Dropdown>
           }
-        ></Card>
+        >
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <TextIcon
+              style={{
+                marginRight: "4px",
+              }}
+            />
+            {dueDateOptions && (
+              <Tag
+                icon={
+                  <ClockCircleOutlined
+                    style={{
+                      fontSize: "12px",
+                    }}
+                  />
+                }
+                style={{
+                  padding: "0 4px",
+                  marginInlineEnd: "0",
+                  backgroundColor:
+                    dueDateOptions.color === "default"
+                      ? "transparent"
+                      : "unset",
+                }}
+                color={dueDateOptions.color}
+                bordered={dueDateOptions.color !== "default"}
+              >
+                {dueDateOptions.text}
+              </Tag>
+            )}
+            {!!users?.length && (
+              <Space
+                size={4}
+                wrap
+                direction="horizontal"
+                align="center"
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginLeft: "auto",
+                  marginRight: "0",
+                }}
+              >
+                {users.map((user) => {
+                  return (
+                    <Tooltip key={user.id} title={user.namme}>
+                      <CustomAvatar name={user.namme} src={user.avatarUrl} />
+                    </Tooltip>
+                  );
+                })}
+              </Space>
+            )}
+          </div>
+        </Card>
       </ConfigProvider>
     </>
   );
