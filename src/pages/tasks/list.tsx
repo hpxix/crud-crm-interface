@@ -6,15 +6,16 @@ import KanbanColumn from "@/components/tasks/Kanban/column";
 import KanbanItem from "@/components/tasks/Kanban/item";
 import { TASKS_QUERY, TASK_STAGES_QUERY } from "@/graphql/queries";
 import { TaskStage } from "@/graphql/schema.types";
-import { KanbanTasksQuery } from "@/graphql/types";
+import { TasksQuery } from "@/graphql/types";
 import { useList } from "@refinedev/core";
 import { GetFieldsFromList, gql } from "@refinedev/nestjs-query";
 import React, { useMemo } from "react";
+import ProjectCard from "@/components/tasks/Kanban/card";
 
-type Task = GetFieldsFromList<KanbanTasksQuery>;
+type Task = GetFieldsFromList<TasksQuery>;
 
 function List() {
-  const { data: stages, isLoading: isLoadinStages } = useList({
+  const { data: stages, isLoading: isLoadinStages } = useList<TaskStage>({
     resource: "taskStages",
     filters: [
       {
@@ -65,9 +66,7 @@ function List() {
 
     const grouped: TaskStage[] = stages.data.map((stage) => ({
       ...stage,
-      tasks: tasks?.data.filter(
-        (task) => task.stageId?.toString() === stage.id
-      ),
+      tasks: tasks.data.filter((task) => task.stageId?.toString() === stage.id),
     }));
     return {
       unassignedStage,
@@ -93,7 +92,7 @@ function List() {
                 id={task?.id}
                 data={{ ...task, stageId: "unassigned" }}
               >
-                {task.title}
+                <ProjectCard {...task} dueDate={task.dueDate || undefined} />
               </KanbanItem>
             ))}
           </KanbanColumn>

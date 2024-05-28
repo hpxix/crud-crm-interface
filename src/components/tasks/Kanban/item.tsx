@@ -36,7 +36,9 @@ function KanbanItem({ children, id, data }: React.PropsWithChildren<Props>) {
                 boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px;",
                 cursor: "grabbing",
               }}
-            ></div>
+            >
+              {children}
+            </div>
           </DragOverlay>
         )}
         {children}
