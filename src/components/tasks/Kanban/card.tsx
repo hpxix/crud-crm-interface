@@ -1,34 +1,51 @@
-import { User } from "@/graphql/schema.types";
-import { ConfigProvider, theme, Card, Button } from "antd";
-import { Text } from "@/components/text";
-import React, { useMemo } from "react";
-import { Dropdown, MenuProps, Space, Tag, Tooltip } from "antd/lib";
+import { memo, useMemo } from "react";
+
+import { useDelete, useNavigation } from "@refinedev/core";
+
 import {
   ClockCircleOutlined,
   DeleteOutlined,
   EyeOutlined,
   MoreOutlined,
 } from "@ant-design/icons";
-import { CustomAvatar } from "@/components/custom-avatar";
-import { TextIcon } from "@/components/icon";
+import type { MenuProps } from "antd";
+import {
+  Button,
+  Card,
+  ConfigProvider,
+  Dropdown,
+  Skeleton,
+  Space,
+  Tag,
+  theme,
+  Tooltip,
+} from "antd";
 import dayjs from "dayjs";
-import { getDateColor } from "@/utilities-first";
-import { useDelete, useNavigation } from "@refinedev/core";
 
-interface ProjectCardProps {
+import { CustomAvatar, Text } from "@/components";
+import { User } from "@/graphql/schema.types";
+import { getDateColor } from "@/providers/utilities";
+import { TextIcon } from "@/components/icon";
+
+type ProjectCardProps = {
   id: string;
   title: string;
-  updateAt: string;
+  updatedAt: string;
   dueDate?: string;
   users?: {
     id: string;
-    namme: string;
+    name: string;
     avatarUrl?: User["avatarUrl"];
   }[];
-}
+};
 
-function ProjectCard({ id, title, dueDate, users }: ProjectCardProps) {
-  const token = theme.useToken();
+export const ProjectCard = ({
+  id,
+  title,
+  dueDate,
+  users,
+}: ProjectCardProps) => {
+  const { token } = theme.useToken();
   const { edit } = useNavigation();
   const { mutate } = useDelete();
 
@@ -74,123 +91,164 @@ function ProjectCard({ id, title, dueDate, users }: ProjectCardProps) {
   }, [dueDate]);
 
   return (
-    <>
-      <ConfigProvider
-        theme={{
-          components: {
-            Tag: {
-              colorText: token.token?.colorTextSecondary,
-            },
-            Card: {
-              headerBg: "transparent",
-            },
+    <ConfigProvider
+      theme={{
+        components: {
+          Tag: {
+            colorText: token.colorTextSecondary,
           },
+          Card: {
+            headerBg: "transparent",
+          },
+        },
+      }}
+    >
+      <Card
+        size="small"
+        title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
+        onClick={() => {
+          edit("tasks", id, "replace");
         }}
-      >
-        <Card
-          size="small"
-          title={<Text ellipsis={{ tooltip: title }}>{title}</Text>}
-          onClick={() => {
-            edit("tasks", id, "replace");
-          }}
-          extra={
-            <Dropdown
-              trigger={["click"]}
-              menu={{
-                items: dropdownItems,
-                onPointerDown: (e) => {
-                  e.stopPropagation();
-                },
-                onClick: (e) => {
-                  e.domEvent.stopPropagation();
-                },
-              }}
-              placement="bottom"
-              arrow={{ pointAtCenter: true }}
-            >
-              <Button
-                type="text"
-                shape="circle"
-                icon={
-                  <MoreOutlined
-                    style={{
-                      transform: "rotate(90deg)",
-                    }}
-                  />
-                }
-                onPointerDown={(e) => {
-                  e.stopPropagation();
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              />
-            </Dropdown>
-          }
-        >
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              gap: "8px",
+        extra={
+          <Dropdown
+            trigger={["click"]}
+            menu={{
+              items: dropdownItems,
+              onPointerDown: (e) => {
+                e.stopPropagation();
+              },
+              onClick: (e) => {
+                e.domEvent.stopPropagation();
+              },
             }}
+            placement="bottom"
+            arrow={{ pointAtCenter: true }}
           >
-            <TextIcon
-              style={{
-                marginRight: "4px",
+            <Button
+              type="text"
+              shape="circle"
+              icon={
+                <MoreOutlined
+                  style={{
+                    transform: "rotate(90deg)",
+                  }}
+                />
+              }
+              onPointerDown={(e) => {
+                e.stopPropagation();
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
               }}
             />
-            {dueDateOptions && (
-              <Tag
-                icon={
-                  <ClockCircleOutlined
-                    style={{
-                      fontSize: "12px",
-                    }}
-                  />
-                }
-                style={{
-                  padding: "0 4px",
-                  marginInlineEnd: "0",
-                  backgroundColor:
-                    dueDateOptions.color === "default"
-                      ? "transparent"
-                      : "unset",
-                }}
-                color={dueDateOptions.color}
-                bordered={dueDateOptions.color !== "default"}
-              >
-                {dueDateOptions.text}
-              </Tag>
-            )}
-            {!!users?.length && (
-              <Space
-                size={4}
-                wrap
-                direction="horizontal"
-                align="center"
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginLeft: "auto",
-                  marginRight: "0",
-                }}
-              >
-                {users.map((user) => {
-                  return (
-                    <Tooltip key={user.id} title={user.namme}>
-                      <CustomAvatar name={user.namme} src={user.avatarUrl} />
-                    </Tooltip>
-                  );
-                })}
-              </Space>
-            )}
-          </div>
-        </Card>
-      </ConfigProvider>
-    </>
+          </Dropdown>
+        }
+      >
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <TextIcon
+            style={{
+              marginRight: "4px",
+            }}
+          />
+          {dueDateOptions && (
+            <Tag
+              icon={
+                <ClockCircleOutlined
+                  style={{
+                    fontSize: "12px",
+                  }}
+                />
+              }
+              style={{
+                padding: "0 4px",
+                marginInlineEnd: "0",
+                backgroundColor:
+                  dueDateOptions.color === "default" ? "transparent" : "unset",
+              }}
+              color={dueDateOptions.color}
+              bordered={dueDateOptions.color !== "default"}
+            >
+              {dueDateOptions.text}
+            </Tag>
+          )}
+          {!!users?.length && (
+            <Space
+              size={4}
+              wrap
+              direction="horizontal"
+              align="center"
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginLeft: "auto",
+                marginRight: "0",
+              }}
+            >
+              {users.map((user) => {
+                return (
+                  <Tooltip key={user.id} title={user.name}>
+                    <CustomAvatar name={user.name} src={user.avatarUrl} />
+                  </Tooltip>
+                );
+              })}
+            </Space>
+          )}
+        </div>
+      </Card>
+    </ConfigProvider>
   );
-}
+};
 
-export default ProjectCard;
+export const ProjectCardSkeleton = () => {
+  return (
+    <Card
+      size="small"
+      bodyStyle={{
+        display: "flex",
+        justifyContent: "center",
+        gap: "8px",
+      }}
+      title={
+        <Skeleton.Button
+          active
+          size="small"
+          style={{
+            width: "200px",
+            height: "22px",
+          }}
+        />
+      }
+    >
+      <Skeleton.Button
+        active
+        size="small"
+        style={{
+          width: "200px",
+        }}
+      />
+      <Skeleton.Avatar active size="small" />
+    </Card>
+  );
+};
+
+
+//it's important to memoize the cards to render only on certain conditions, all of the props of 
+//^..the project card components are the same as the prev rendered then the project card SHOULD NOT BE RENDERED 
+//^...This is very usefull when the parent component is re-rendered but the props of the project card
+//^...are not changed
+export const ProjectCardMemo = memo(ProjectCard, (prev, next) => {
+  return (
+    prev.id === next.id &&
+    prev.title === next.title &&
+    prev.dueDate === next.dueDate &&
+    prev.users?.length === next.users?.length &&
+    prev.updatedAt === next.updatedAt
+  );
+});
