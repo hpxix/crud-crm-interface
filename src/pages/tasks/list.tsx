@@ -6,7 +6,7 @@ import KanbanColumn from "@/components/tasks/Kanban/column";
 import KanbanItem from "@/components/tasks/Kanban/item";
 import { TASKS_QUERY, TASK_STAGES_QUERY } from "@/graphql/queries";
 import { TaskStagesQuery, TasksQuery } from "@/graphql/types";
-import { useList, useUpdate } from "@refinedev/core";
+import { useList, useNavigation, useUpdate } from "@refinedev/core";
 import { GetFieldsFromList, gql } from "@refinedev/nestjs-query";
 import React, { useMemo } from "react";
 import { ProjectCardMemo } from "@/components/tasks/Kanban/card";
@@ -20,6 +20,8 @@ type Task = GetFieldsFromList<TasksQuery>;
 type TaskStage = GetFieldsFromList<TaskStagesQuery> & { tasks: Task[] };
 
 function List({ children }: React.PropsWithChildren) {
+  const { replace } = useNavigation();
+
   const { data: stages, isLoading: isLoadinStages } = useList<TaskStage>({
     resource: "taskStages",
     filters: [
@@ -58,7 +60,7 @@ function List({ children }: React.PropsWithChildren) {
       gqlQuery: TASKS_QUERY,
     },
   });
-  console.log('stages:', stages)
+  console.log("stages:", stages);
   const { mutate: updateTask } = useUpdate();
 
   const taskStages = React.useMemo(() => {
@@ -81,7 +83,13 @@ function List({ children }: React.PropsWithChildren) {
     };
   }, [stages, tasks]);
 
-  const handleAddCard = (args: { stageId: string }) => {};
+  const handleAddCard = (args: { stageId: string }) => {
+    const path =
+      args.stageId === "unassigned"
+        ? "/tasks/new"
+        : `/tasks/new/?${args.stageId}`;
+    replace(path);
+  };
 
   //this function will update task stage when the task is dragged and droped
   const handleOnDragEnd = (event: DragEndEvent) => {
