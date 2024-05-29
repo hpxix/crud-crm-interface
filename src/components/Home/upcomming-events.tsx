@@ -30,7 +30,6 @@ function UpcommingEvents() {
       gqlQuery: DASHBORAD_CALENDAR_UPCOMING_EVENTS_QUERY,
     },
   });
-  console.log("data:", JSON.stringify(data));
   return (
     <div>
       <Card

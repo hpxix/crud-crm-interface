@@ -49,7 +49,6 @@ if(isError){
 }
 const isLoading = false
 
-console.log(isLoadingAudit, isLoadingDeals)
 
   return (
     <Card
