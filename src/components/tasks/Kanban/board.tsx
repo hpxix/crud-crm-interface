@@ -1,7 +1,16 @@
 import React from "react";
-import { DndContext } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 
-export const KanBanBoardContainer = ({ children }: React.PropsWithChildren) => {
+export const KanBanBoardContainer = ({
+  children,
+}: React.PropsWithChildren) => {
   return (
     <div
       style={{
@@ -27,6 +36,31 @@ export const KanBanBoardContainer = ({ children }: React.PropsWithChildren) => {
   );
 };
 
-export const KanBanBoard = ({ children }: React.PropsWithChildren) => {
-  return <DndContext>{children}</DndContext>;
+interface Props {
+  onDragEnd: (even: DragEndEvent) => void;
+}
+
+export const KanBanBoard = ({
+  children,
+  onDragEnd,
+}: React.PropsWithChildren<Props>) => {
+  const mouseSensor = useSensor(MouseSensor, {
+    //activationConstarint is a prop we can use to specify a position under which a draggable options becomes active or in simple words where we actually dragging it
+    activationConstraint: {
+      distance: 5,
+    },
+  });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      distance: 5,
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
+
+  return (
+    <DndContext onDragEnd={onDragEnd} sensors={sensors}>
+      {children}
+    </DndContext>
+  );
 };

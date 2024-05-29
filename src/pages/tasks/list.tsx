@@ -5,19 +5,21 @@ import {
 import KanbanColumn from "@/components/tasks/Kanban/column";
 import KanbanItem from "@/components/tasks/Kanban/item";
 import { TASKS_QUERY, TASK_STAGES_QUERY } from "@/graphql/queries";
-import { TaskStage } from "@/graphql/schema.types";
-import { TasksQuery } from "@/graphql/types";
-import { useList } from "@refinedev/core";
+import { TaskStagesQuery, TasksQuery } from "@/graphql/types";
+import { useList, useUpdate } from "@refinedev/core";
 import { GetFieldsFromList, gql } from "@refinedev/nestjs-query";
 import React, { useMemo } from "react";
 import { ProjectCardMemo } from "@/components/tasks/Kanban/card";
 import { KanbanAddCardButton } from "@/components/tasks/Kanban/add-card-button";
 import KanbanColumnSkeleton from "@/components/skeleton/kanban";
 import { ProjectCardSkeleton } from "@/components";
+import { DragEndEvent } from "@dnd-kit/core";
+import { UPDATE_TASK_STAGE_MUTATION } from "@/graphql/mutations";
 
 type Task = GetFieldsFromList<TasksQuery>;
+type TaskStage = GetFieldsFromList<TaskStagesQuery> & { tasks: Task[] };
 
-function List() {
+function List({ children }: React.PropsWithChildren) {
   const { data: stages, isLoading: isLoadinStages } = useList<TaskStage>({
     resource: "taskStages",
     filters: [
@@ -37,7 +39,6 @@ function List() {
       gqlQuery: TASK_STAGES_QUERY,
     },
   });
-
   const { data: tasks, isLoading: isLoadingTask } = useList<Task>({
     resource: "tasks",
     sorters: [
@@ -57,6 +58,8 @@ function List() {
       gqlQuery: TASKS_QUERY,
     },
   });
+  console.log('stages:', stages)
+  const { mutate: updateTask } = useUpdate();
 
   const taskStages = React.useMemo(() => {
     if (!tasks?.data || !stages?.data) {
@@ -71,6 +74,7 @@ function List() {
       ...stage,
       tasks: tasks.data.filter((task) => task.stageId?.toString() === stage.id),
     }));
+    console.log("grouped:", grouped);
     return {
       unassignedStage,
       columns: grouped,
@@ -78,12 +82,37 @@ function List() {
   }, [stages, tasks]);
 
   const handleAddCard = (args: { stageId: string }) => {};
+
+  //this function will update task stage when the task is dragged and droped
+  const handleOnDragEnd = (event: DragEndEvent) => {
+    let stageId = event.over?.id as undefined | string | null;
+    const taskId = event.active.id as string;
+    const taskStageId = event.active.data.current?.stageId;
+    if (taskStageId === stageId) return;
+    if (stageId === "unassigned") {
+      stageId = null;
+    }
+    updateTask({
+      resource: "tasks",
+      id: taskId,
+      values: {
+        stageId: stageId,
+      },
+      successNotification: false,
+      //to make our app to seam more performant because then the change will happen automatically and it's going to move it before it actually move it in the backend
+      mutationMode: "optimistic",
+      meta: {
+        gqlMutation: UPDATE_TASK_STAGE_MUTATION,
+      },
+    });
+  };
+
   const isLoading = isLoadinStages || isLoadingTask;
   if (isLoading) return <PageSkeleton />;
   return (
     <>
       <KanBanBoardContainer>
-        <KanBanBoard>
+        <KanBanBoard onDragEnd={handleOnDragEnd}>
           <KanbanColumn
             id="unassigned"
             title={"unassigned"}
@@ -107,7 +136,7 @@ function List() {
                 onClick={() => {
                   handleAddCard({ stageId: "unassigned" });
                 }}
-              ></KanbanAddCardButton>
+              />
             )}
           </KanbanColumn>
           {taskStages.columns?.map((column) => (
@@ -130,12 +159,14 @@ function List() {
               {column.tasks.length && (
                 <KanbanAddCardButton
                   onClick={() => handleAddCard({ stageId: column.id })}
-                ></KanbanAddCardButton>
+                />
               )}
             </KanbanColumn>
           ))}
         </KanBanBoard>
       </KanBanBoardContainer>
+      {/* children is for modal */}
+      {children}
     </>
   );
 }
