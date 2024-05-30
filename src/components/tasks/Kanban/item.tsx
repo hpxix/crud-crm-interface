@@ -33,7 +33,7 @@ function KanbanItem({ children, id, data }: React.PropsWithChildren<Props>) {
             <div
               style={{
                 borderRadius: "8px",
-                boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px;",
+                boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
                 cursor: "grabbing",
               }}
             >
