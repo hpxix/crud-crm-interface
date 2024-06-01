@@ -54,6 +54,13 @@ export type KanbanTasksQuery = {
   };
 };
 
+export type KanbanTaskStagesQuery = {
+  taskStages: Pick<Types.TaskStageConnection, "totalCount"> & {
+    nodes: Array<Pick<Types.TaskStage, "id" | "title">>;
+  };
+};
+
+
 export type UpdateTaskStageMutationVariables = Types.Exact<{
   input: Types.UpdateOneTaskInput;
 }>;
