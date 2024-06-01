@@ -60,7 +60,6 @@ function List({ children }: React.PropsWithChildren) {
       gqlQuery: TASKS_QUERY,
     },
   });
-  console.log("stages:", stages);
   const { mutate: updateTask } = useUpdate();
 
   const taskStages = React.useMemo(() => {
@@ -76,7 +75,6 @@ function List({ children }: React.PropsWithChildren) {
       ...stage,
       tasks: tasks.data.filter((task) => task.stageId?.toString() === stage.id),
     }));
-    console.log("grouped:", grouped);
     return {
       unassignedStage,
       columns: grouped,
@@ -155,16 +153,17 @@ function List({ children }: React.PropsWithChildren) {
               count={column.tasks.length}
               onAddClick={() => handleAddCard({ stageId: column.id })}
             >
+              {isLoading && <ProjectCardSkeleton />}
               {!isLoading &&
                 column.tasks.map((task) => (
                   <KanbanItem key={task.id} id={task.id} data={task}>
                     <ProjectCardMemo
                       {...task}
                       dueDate={task.dueDate || undefined}
-                    ></ProjectCardMemo>
+                    />
                   </KanbanItem>
                 ))}
-              {column.tasks.length && (
+              {column.tasks.length < 1 && (
                 <KanbanAddCardButton
                   onClick={() => handleAddCard({ stageId: column.id })}
                 />
