@@ -53,7 +53,6 @@ export const CompanyListPage = ({ children }: React.PropsWithChildren) => {
       gqlQuery: COMPANIES_LIST_QUERY,
     },
   });
-  console.log("tableProps:", tableProps);
   return (
     <>
       <List
