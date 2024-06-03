@@ -89,7 +89,7 @@ export const totalCountVariants: {
         />
       </IconWrapper>
     ),
-    title: "Number of contacts",
+    title: "عدد جهات التواصل",
     data: [
       {
         index: "1",
