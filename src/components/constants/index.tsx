@@ -130,7 +130,7 @@ export const totalCountVariants: {
         />
       </IconWrapper>
     ),
-    title: "Total deals in pipeline",
+    title: "إجمالي الصفقات قيد التنفيذ",
     data: [
       {
         index: "1",
