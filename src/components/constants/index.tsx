@@ -52,7 +52,7 @@ export const totalCountVariants: {
         />
       </IconWrapper>
     ),
-    title: "Number of companies",
+    title: "عدد الشركات",
     data: [
       {
         index: "1",
