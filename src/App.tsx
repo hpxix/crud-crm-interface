@@ -47,7 +47,6 @@ import TasksCreatePage from "./pages/tasks/create";
 function App() {
   return (
     <BrowserRouter>
-      <GitHubBanner />
       <RefineKbarProvider>
         {/* <ColorModeContextProvider> */}
         <AntdApp>
