@@ -8,19 +8,25 @@ import {
   EditButton,
   DeleteButton,
 } from "@refinedev/antd";
-import { getDefaultFilter, useGo } from "@refinedev/core";
+import { getDefaultFilter, useGo, HttpError } from "@refinedev/core";
 import { Table, Input, Space } from "antd";
 import { CustomAvatar, Text } from "@/components";
 import React from "react";
 import { Company } from "@/graphql/schema.types";
 import { currencyNumber } from "@/utilities-first";
+import type { GetFieldsFromList } from "@refinedev/nestjs-query";
+import type { CompaniesListQuery } from "@/graphql/types";
 
 export const CompanyListPage = ({ children }: React.PropsWithChildren) => {
   const go = useGo();
 
-  const { tableProps, filters } = useTable({
+  const { tableProps, filters } = useTable<
+    GetFieldsFromList<CompaniesListQuery>,
+    HttpError,
+    GetFieldsFromList<CompaniesListQuery>
+  >({
     resource: "companies",
-    onSearch: (values: any) => {
+    onSearch: (values) => {
       return [
         {
           field: "name",
