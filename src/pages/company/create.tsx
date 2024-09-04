@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Form, Input, Select } from "antd";
-import CompanyListPage from "./list";
+import { CompanyListPage } from "./list";
 import { useModalForm, useSelect } from "@refinedev/antd";
 import { useGo } from "@refinedev/core";
 import { CREATE_COMPANY_MUTATION } from "@/graphql/mutations";
@@ -41,7 +41,7 @@ function Create() {
       gqlQuery: USERS_SELECT_QUERY,
     },
   });
-  
+
   return (
     <CompanyListPage>
       <Modal
