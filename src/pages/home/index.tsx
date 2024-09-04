@@ -98,7 +98,6 @@ export const Home = () => {
           }}
         >
           {/* <DashboardTasksChart /> */}
-          DashboardTasksChart
         </Col>
         <Col
           xs={24}
@@ -109,7 +108,6 @@ export const Home = () => {
           }}
         >
           {/* <CompaniesMap /> */}
-          CompaniesMap
         </Col>
       </Row>
     </div>

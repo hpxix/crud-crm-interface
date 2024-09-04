@@ -47,7 +47,7 @@ import TasksCreatePage from "./pages/tasks/create";
 function App() {
   return (
     <BrowserRouter>
-      {/* <RefineKbarProvider> */}
+      <RefineKbarProvider>
         {/* <ColorModeContextProvider> */}
         <AntdApp>
           <DevtoolsProvider>
@@ -113,7 +113,7 @@ function App() {
           </DevtoolsProvider>
         </AntdApp>
         {/* </ColorModeContextProvider> */}
-      {/* </RefineKbarProvider> */}
+      </RefineKbarProvider>
     </BrowserRouter>
   );
 }
