@@ -10,6 +10,7 @@ import LatesActivities from "@/components/Home/dashboard-latest-activities";
 import { CustomAvatar } from "@/components/custom-avatar";
 import { Text } from "@/components/text";
 import { ContactStatusTag } from "@/components/tags/contact-status-tags";
+import { PaginationTotal } from "@/components/pagination-total/index";
 
 export {
   UpcommingEvents,
@@ -24,6 +25,7 @@ export {
   CustomAvatar,
   Text,
   ContactStatusTag,
+  PaginationTotal
 };
 export * from "./tags/user-tag";
 export * from "./tasks/form/description";
@@ -32,7 +34,3 @@ export * from "./tasks/form/header";
 export * from "./tasks/form/stage";
 export * from "./tasks/form/title";
 export * from "./tasks/form/users";
-
-
-
-
