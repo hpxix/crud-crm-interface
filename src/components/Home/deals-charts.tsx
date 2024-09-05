@@ -63,9 +63,9 @@ function DealsCharts() {
       return { fill: datum.state === "Won" ? won : lost };
     },
     color: (datum) => {
-      return datum.state === "Won" ? "  " : "#F5222D";
+      return datum.state === "Won" ? "#52C41A" : "#F5222D";
     },
-  };
+};
 
   return (
     <>

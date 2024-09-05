@@ -23,21 +23,21 @@ export const Home = () => {
           <DashboardTotalCountCard
             resources="companies"
             isLoading={isLoading}
-            totalCount={data?.data["companies"].totalCount}
+            totalCount={data?.data.companies.totalCount}
           />
         </Col>
         <Col xs={24} sm={24} xl={8}>
           <DashboardTotalCountCard
             resources="contacts"
             isLoading={isLoading}
-            totalCount={data?.data["contacts"].totalCount}
+            totalCount={data?.data.contacts.totalCount}
           />
         </Col>
         <Col xs={24} sm={24} xl={8}>
           <DashboardTotalCountCard
             resources="deals"
             isLoading={isLoading}
-            totalCount={data?.data["deals"].totalCount}
+            totalCount={data?.data.deals.totalCount}
           />
         </Col>
       </Row>
@@ -53,16 +53,17 @@ export const Home = () => {
           sm={24}
           xl={8}
           style={{
-            height: "432px",
+            height: "460px",
           }}
         >
+          <UpcommingEvents />
         </Col>
         <Col
           xs={24}
           sm={24}
           xl={16}
           style={{
-            height: "432px",
+            height: "460px",
           }}
         >
           <DealsCharts />
@@ -75,39 +76,8 @@ export const Home = () => {
           marginTop: "32px",
         }}
       >
-        <Col xs={24} sm={24} xl={14} xxl={16}>
+        <Col xs={24}>
           <LatesActivities />
-        </Col>
-        <Col xs={24} sm={24} xl={10} xxl={8}>
-          <UpcommingEvents />
-        </Col>
-      </Row>
-
-      <Row
-        gutter={[32, 32]}
-        style={{
-          marginTop: "32px",
-        }}
-      >
-        <Col
-          xs={24}
-          sm={24}
-          xl={8}
-          style={{
-            height: "448px",
-          }}
-        >
-          {/* <DashboardTasksChart /> */}
-        </Col>
-        <Col
-          xs={24}
-          sm={24}
-          xl={16}
-          style={{
-            height: "448px",
-          }}
-        >
-          {/* <CompaniesMap /> */}
         </Col>
       </Row>
     </div>
